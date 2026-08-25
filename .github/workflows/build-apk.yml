@@ -51,14 +51,20 @@ jobs:
       # ---------------------------------------------------------------
       - name: Chuẩn bị keystore
         id: keystore
+        env:
+          SECRET_KEYSTORE_BASE64: ${{ secrets.KEYSTORE_BASE64 }}
+          SECRET_KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+          SECRET_KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
+          SECRET_KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
         run: |
           mkdir -p keystore_dir
-          if [ -n "${{ secrets.KEYSTORE_BASE64 }}" ]; then
+          if [ -n "$SECRET_KEYSTORE_BASE64" ]; then
             echo "Dùng keystore từ Secrets (chữ ký cố định)"
-            echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 -d > keystore_dir/release.jks
-            echo "STORE_PASSWORD=${{ secrets.KEYSTORE_PASSWORD }}" >> "$GITHUB_ENV"
-            echo "KEY_ALIAS=${{ secrets.KEY_ALIAS }}" >> "$GITHUB_ENV"
-            echo "KEY_PASSWORD=${{ secrets.KEY_PASSWORD }}" >> "$GITHUB_ENV"
+            echo "$SECRET_KEYSTORE_BASE64" | base64 -d > keystore_dir/release.jks
+            echo "STORE_PASSWORD=$SECRET_KEYSTORE_PASSWORD" >> "$GITHUB_ENV"
+            echo "KEY_ALIAS=$SECRET_KEY_ALIAS" >> "$GITHUB_ENV"
+            echo "KEY_PASSWORD=$SECRET_KEY_PASSWORD" >> "$GITHUB_ENV"
+            echo "used_secret=true" >> "$GITHUB_OUTPUT"
           else
             echo "Chưa có Secrets, tự tạo keystore mới cho lần build này"
             keytool -genkeypair -v \
@@ -70,6 +76,7 @@ jobs:
             echo "STORE_PASSWORD=nfcreader123" >> "$GITHUB_ENV"
             echo "KEY_ALIAS=nfcreader" >> "$GITHUB_ENV"
             echo "KEY_PASSWORD=nfcreader123" >> "$GITHUB_ENV"
+            echo "used_secret=false" >> "$GITHUB_OUTPUT"
           fi
           echo "KEYSTORE_PATH=$(pwd)/keystore_dir/release.jks" >> "$GITHUB_ENV"
 
@@ -98,7 +105,7 @@ jobs:
       # Chỉ đính kèm keystore vào Artifacts khi KHÔNG dùng Secrets,
       # để bạn tải về và lưu làm Secret cho các lần build sau (giữ chữ ký cố định).
       - name: Tải keystore tự tạo lên Artifacts (chỉ khi chưa cấu hình Secrets)
-        if: ${{ secrets.KEYSTORE_BASE64 == '' }}
+        if: ${{ steps.keystore.outputs.used_secret == 'false' }}
         uses: actions/upload-artifact@v4
         with:
           name: generated-keystore-KHONG-CHIA-SE
