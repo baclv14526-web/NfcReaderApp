@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">Đọc Thẻ NFC</string>
+    <string name="status_waiting">Đưa thẻ NFC lại gần mặt sau điện thoại</string>
+    <string name="status_reading">Đang đọc thẻ…</string>
+    <string name="hint_scan">Chưa có dữ liệu.\nHãy chạm thẻ (vé xe, CCCD gắn chip, thẻ siêu thị…) vào mặt sau điện thoại.</string>
+    <string name="btn_clear">Xóa kết quả</string>
+    <string name="nfc_not_supported">Thiết bị này không hỗ trợ NFC.</string>
+    <string name="nfc_disabled">NFC đang tắt. Vui lòng bật NFC trong Cài đặt.</string>
+</resources>
