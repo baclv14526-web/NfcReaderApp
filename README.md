@@ -13,6 +13,11 @@ hiển thị rõ ràng trên màn hình, có cuộn dọc (ScrollView) khi dài.
 | Mifare Ultralight (vé xe 1 lần) | UID, dump các trang (page) dữ liệu |
 | CCCD gắn chip / thẻ ISO-DEP (ISO 14443-4) | UID, ATQA/SAK, phản hồi thô (hex) ở tầng APDU |
 
+**Phản hồi rung + âm thanh:** mỗi lần quét thẻ, app tự phát 1 tiếng bíp + rung nhẹ để báo
+**thành công** (rung 1 lần ngắn + bíp cao), hoặc **thất bại** (rung 2 nhịp + bíp trầm) khi
+thẻ bị nhấc ra quá sớm hoặc không đọc được. 2 file âm thanh (`res/raw/beep_success.wav`,
+`beep_fail.wav`) được tổng hợp bằng sóng sin thuần túy, không dùng file bản quyền nào.
+
 **Lưu ý quan trọng về CCCD gắn chip:** để đọc đầy đủ dữ liệu cá nhân (họ tên, ngày sinh,
 ảnh...) trên chip CCCD theo chuẩn ICAO 9303, cần thực hiện thêm bước xác thực **BAC/PACE**
 bằng cách nhập số CCCD + ngày sinh + ngày hết hạn (lấy từ vùng MRZ) để sinh khoá giải mã.

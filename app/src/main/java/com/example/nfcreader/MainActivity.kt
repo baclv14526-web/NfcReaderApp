@@ -1,8 +1,11 @@
 package com.example.nfcreader
 
 import android.app.PendingIntent
+import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.media.AudioAttributes
+import android.media.SoundPool
 import android.nfc.NdefMessage
 import android.nfc.NfcAdapter
 import android.nfc.Tag
@@ -16,6 +19,9 @@ import android.nfc.tech.NfcF
 import android.nfc.tech.NfcV
 import android.os.Build
 import android.os.Bundle
+import android.os.VibrationEffect
+import android.os.Vibrator
+import android.os.VibratorManager
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -28,6 +34,13 @@ class MainActivity : AppCompatActivity() {
     private lateinit var tvResult: TextView
     private lateinit var tvStatus: TextView
 
+    // --- Phản hồi rung + âm thanh khi đọc thẻ ---
+    private lateinit var soundPool: SoundPool
+    private var soundIdSuccess: Int = 0
+    private var soundIdFail: Int = 0
+    private var soundsLoaded = false
+    private var vibrator: Vibrator? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -39,6 +52,8 @@ class MainActivity : AppCompatActivity() {
             tvStatus.text = getString(R.string.status_waiting)
         }
 
+        setupFeedback()
+
         nfcAdapter = NfcAdapter.getDefaultAdapter(this)
 
         if (nfcAdapter == null) {
@@ -48,6 +63,76 @@ class MainActivity : AppCompatActivity() {
 
         // Nếu app được mở trực tiếp từ 1 sự kiện NFC (ví dụ vừa cài xong rồi chạm thẻ)
         handleIntent(intent)
+    }
+
+    /** Khởi tạo SoundPool (phát 2 âm thanh ngắn) và Vibrator (rung phản hồi). */
+    private fun setupFeedback() {
+        val audioAttributes = AudioAttributes.Builder()
+            .setUsage(AudioAttributes.USAGE_ASSISTANCE_SONIFICATION)
+            .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
+            .build()
+
+        soundPool = SoundPool.Builder()
+            .setMaxStreams(2)
+            .setAudioAttributes(audioAttributes)
+            .build()
+
+        soundPool.setOnLoadCompleteListener { _, _, status ->
+            if (status == 0) soundsLoaded = true
+        }
+
+        soundIdSuccess = soundPool.load(this, R.raw.beep_success, 1)
+        soundIdFail = soundPool.load(this, R.raw.beep_fail, 1)
+
+        vibrator = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            val vibratorManager = getSystemService(Context.VIBRATOR_MANAGER_SERVICE) as VibratorManager
+            vibratorManager.defaultVibrator
+        } else {
+            @Suppress("DEPRECATION")
+            getSystemService(Context.VIBRATOR_SERVICE) as? Vibrator
+        }
+    }
+
+    /**
+     * Phát rung + âm thanh phản hồi.
+     * @param success true = đọc thẻ thành công (rung ngắn 1 lần + tiếng bíp cao),
+     *                false = đọc thất bại (rung 2 lần liên tiếp + tiếng bíp trầm).
+     */
+    private fun playFeedback(success: Boolean) {
+        // Âm thanh
+        if (soundsLoaded) {
+            val soundId = if (success) soundIdSuccess else soundIdFail
+            soundPool.play(soundId, 1f, 1f, 1, 0, 1f)
+        }
+
+        // Rung
+        val v = vibrator
+        if (v != null && v.hasVibrator()) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                val effect = if (success) {
+                    VibrationEffect.createOneShot(60, VibrationEffect.DEFAULT_AMPLITUDE)
+                } else {
+                    // Rung 2 nhịp ngắn để phân biệt rõ với rung thành công
+                    val pattern = longArrayOf(0, 80, 60, 80)
+                    VibrationEffect.createWaveform(pattern, -1)
+                }
+                v.vibrate(effect)
+            } else {
+                @Suppress("DEPRECATION")
+                if (success) {
+                    v.vibrate(60)
+                } else {
+                    v.vibrate(longArrayOf(0, 80, 60, 80), -1)
+                }
+            }
+        }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        if (::soundPool.isInitialized) {
+            soundPool.release()
+        }
     }
 
     override fun onResume() {
@@ -115,7 +200,10 @@ class MainActivity : AppCompatActivity() {
         } else {
             @Suppress("DEPRECATION")
             intent.getParcelableExtra(NfcAdapter.EXTRA_TAG)
-        } ?: return
+        } ?: run {
+            playFeedback(success = false)
+            return
+        }
 
         tvStatus.text = getString(R.string.status_reading)
         val sb = StringBuilder()
@@ -124,14 +212,26 @@ class MainActivity : AppCompatActivity() {
         sb.appendLine("Thời gian: $time")
         sb.appendLine()
 
-        appendTagBasicInfo(tag, sb)
-        appendNdefContent(tag, sb)
-        appendMifareClassicContent(tag, sb)
-        appendMifareUltralightContent(tag, sb)
-        appendIsoDepInfo(tag, sb)
+        try {
+            appendTagBasicInfo(tag, sb)
+            appendNdefContent(tag, sb)
+            appendMifareClassicContent(tag, sb)
+            appendMifareUltralightContent(tag, sb)
+            appendIsoDepInfo(tag, sb)
 
-        tvResult.text = sb.toString()
-        tvStatus.text = getString(R.string.status_waiting)
+            tvResult.text = sb.toString()
+            tvStatus.text = getString(R.string.status_waiting)
+            playFeedback(success = true)
+        } catch (e: Exception) {
+            // Thường xảy ra khi thẻ bị nhấc ra quá sớm trong lúc đang đọc
+            sb.appendLine()
+            sb.appendLine("--- LỖI ---")
+            sb.appendLine("Không đọc được thẻ: ${e.message}")
+            sb.appendLine("(Hãy giữ thẻ áp sát mặt sau điện thoại và thử lại)")
+            tvResult.text = sb.toString()
+            tvStatus.text = getString(R.string.status_waiting)
+            playFeedback(success = false)
+        }
     }
 
     // ----- Thông tin cơ bản: UID, ATQA/SAK, danh sách công nghệ -----
