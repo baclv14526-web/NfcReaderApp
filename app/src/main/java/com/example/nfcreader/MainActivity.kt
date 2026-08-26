@@ -33,6 +33,7 @@ class MainActivity : AppCompatActivity() {
     private var nfcAdapter: NfcAdapter? = null
     private lateinit var tvResult: TextView
     private lateinit var tvStatus: TextView
+    private lateinit var tvCardType: TextView
 
     // --- Phản hồi rung + âm thanh khi đọc thẻ ---
     private lateinit var soundPool: SoundPool
@@ -47,9 +48,11 @@ class MainActivity : AppCompatActivity() {
 
         tvResult = findViewById(R.id.tvResult)
         tvStatus = findViewById(R.id.tvStatus)
+        tvCardType = findViewById(R.id.tvCardType)
         findViewById<android.view.View>(R.id.btnClear).setOnClickListener {
             tvResult.text = getString(R.string.hint_scan)
             tvStatus.text = getString(R.string.status_waiting)
+            tvCardType.visibility = android.view.View.GONE
         }
 
         setupFeedback()
@@ -210,6 +213,16 @@ class MainActivity : AppCompatActivity() {
         val time = SimpleDateFormat("HH:mm:ss dd/MM/yyyy", Locale.getDefault()).format(java.util.Date())
         sb.appendLine("=== KẾT QUẢ ĐỌC THẺ NFC ===")
         sb.appendLine("Thời gian: $time")
+        sb.appendLine()
+
+        // Nhận diện loại thẻ dựa trên ATQA/SAK/dung lượng - không cần kết nối tới thẻ
+        // nên luôn thực hiện được, kể cả khi các bước đọc chi tiết bên dưới bị lỗi.
+        val guess = CardTypeDetector.detect(tag)
+        tvCardType.text = "${guess.icon} ${guess.title}\n${guess.detail}"
+        tvCardType.visibility = android.view.View.VISIBLE
+        sb.appendLine("--- Nhận diện loại thẻ (gợi ý, có thể không chính xác 100%) ---")
+        sb.appendLine("${guess.icon} ${guess.title}")
+        sb.appendLine(guess.detail)
         sb.appendLine()
 
         try {

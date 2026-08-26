@@ -18,6 +18,13 @@ hiển thị rõ ràng trên màn hình, có cuộn dọc (ScrollView) khi dài.
 thẻ bị nhấc ra quá sớm hoặc không đọc được. 2 file âm thanh (`res/raw/beep_success.wav`,
 `beep_fail.wav`) được tổng hợp bằng sóng sin thuần túy, không dùng file bản quyền nào.
 
+**Nhận diện loại thẻ tự động:** dựa vào ATQA/SAK và dung lượng bộ nhớ (không cần đọc dữ
+liệu riêng tư trên thẻ), app hiển thị 1 badge gợi ý loại thẻ + ứng dụng thường gặp ngay
+sau khi quét, ví dụ: "🚌 Mifare Classic 1K — thường dùng cho vé xe buýt, thẻ gửi xe, thẻ
+thành viên siêu thị". Logic nhận diện nằm trong `CardTypeDetector.kt`, dễ mở rộng thêm
+SAK/ATQA mới. Đây là **suy đoán dựa trên các giá trị SAK phổ biến trên thị trường**, không
+đảm bảo chính xác 100% vì một số nhà sản xuất dùng SAK tùy biến.
+
 **Lưu ý quan trọng về CCCD gắn chip:** để đọc đầy đủ dữ liệu cá nhân (họ tên, ngày sinh,
 ảnh...) trên chip CCCD theo chuẩn ICAO 9303, cần thực hiện thêm bước xác thực **BAC/PACE**
 bằng cách nhập số CCCD + ngày sinh + ngày hết hạn (lấy từ vùng MRZ) để sinh khoá giải mã.
