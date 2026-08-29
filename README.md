@@ -25,6 +25,14 @@ thành viên siêu thị". Logic nhận diện nằm trong `CardTypeDetector.kt`
 SAK/ATQA mới. Đây là **suy đoán dựa trên các giá trị SAK phổ biến trên thị trường**, không
 đảm bảo chính xác 100% vì một số nhà sản xuất dùng SAK tùy biến.
 
+**Lịch sử quét thẻ (lưu SQLite qua Room):** mỗi lần quét (kể cả khi lỗi) đều được lưu tự
+động vào cơ sở dữ liệu SQLite cục bộ trên máy — không cần mạng, không gửi đi đâu cả. Nhấn
+nút **"Xem lịch sử"** ở màn hình chính để mở danh sách các lần quét trước đó, bấm vào 1
+dòng để xem lại toàn bộ nội dung chi tiết mà **không cần quét lại thẻ**. Có thể xóa từng
+dòng (nhấn giữ) hoặc xóa toàn bộ lịch sử. Code liên quan nằm trong package
+`com/example/nfcreader/data/` (`ScanRecord`, `ScanRecordDao`, `AppDatabase`) và
+`HistoryActivity.kt` / `HistoryAdapter.kt`.
+
 **Lưu ý quan trọng về CCCD gắn chip:** để đọc đầy đủ dữ liệu cá nhân (họ tên, ngày sinh,
 ảnh...) trên chip CCCD theo chuẩn ICAO 9303, cần thực hiện thêm bước xác thực **BAC/PACE**
 bằng cách nhập số CCCD + ngày sinh + ngày hết hạn (lấy từ vùng MRZ) để sinh khoá giải mã.

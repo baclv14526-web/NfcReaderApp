@@ -4,6 +4,7 @@ import java.io.FileInputStream
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
+    id("com.google.devtools.ksp")
 }
 
 // Đọc thông tin keystore từ:
@@ -78,4 +79,13 @@ dependencies {
     implementation("androidx.appcompat:appcompat:1.7.0")
     implementation("com.google.android.material:material:1.12.0")
     implementation("androidx.constraintlayout:constraintlayout:2.1.4")
+
+    // Lịch sử quét thẻ - lưu bằng Room (SQLite)
+    implementation("androidx.room:room-runtime:2.6.1")
+    implementation("androidx.room:room-ktx:2.6.1")
+    ksp("androidx.room:room-compiler:2.6.1")
+
+    // Danh sách lịch sử + gắn với vòng đời Activity
+    implementation("androidx.recyclerview:recyclerview:1.3.2")
+    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.8.4")
 }

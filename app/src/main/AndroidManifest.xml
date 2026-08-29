@@ -42,6 +42,11 @@
                 <data android:mimeType="*/*" />
             </intent-filter>
         </activity>
+
+        <activity
+            android:name=".HistoryActivity"
+            android:exported="false"
+            android:label="@string/history_title" />
     </application>
 
 </manifest>

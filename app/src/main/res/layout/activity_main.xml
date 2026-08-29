@@ -71,11 +71,28 @@
             android:padding="14dp" />
     </ScrollView>
 
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/btnClear"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="12dp"
-        android:text="@string/btn_clear" />
+        android:orientation="horizontal"
+        android:layout_margin="12dp">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnClear"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginEnd="6dp"
+            android:text="@string/btn_clear" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnHistory"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginStart="6dp"
+            android:text="@string/btn_history" />
+    </LinearLayout>
 
 </LinearLayout>

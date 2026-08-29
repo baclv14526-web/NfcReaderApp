@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:gravity="center_vertical"
+    android:background="@drawable/bg_history_item"
+    android:layout_marginBottom="8dp"
+    android:padding="14dp">
+
+    <TextView
+        android:id="@+id/tvItemIcon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="12dp"
+        android:textSize="26sp"
+        tools:text="🚌" />
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tvItemTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="15sp"
+            android:textStyle="bold"
+            android:textColor="#212121"
+            android:maxLines="1"
+            android:ellipsize="end"
+            tools:text="Mifare Classic 1K" />
+
+        <TextView
+            android:id="@+id/tvItemSubtitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:textSize="12sp"
+            android:textColor="#757575"
+            android:maxLines="1"
+            android:ellipsize="end"
+            tools:text="UID: 04 A2 3B 9C  •  10:24:15 29/08/2026" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/tvItemStatus"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:textSize="18sp"
+        tools:text="✅" />
+
+</LinearLayout>

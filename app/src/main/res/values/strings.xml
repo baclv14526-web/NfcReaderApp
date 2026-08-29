@@ -4,6 +4,16 @@
     <string name="status_reading">Đang đọc thẻ…</string>
     <string name="hint_scan">Chưa có dữ liệu.\nHãy chạm thẻ (vé xe, CCCD gắn chip, thẻ siêu thị…) vào mặt sau điện thoại.</string>
     <string name="btn_clear">Xóa kết quả</string>
+    <string name="btn_history">Xem lịch sử</string>
+    <string name="history_title">Lịch sử quét thẻ</string>
+    <string name="history_empty">Chưa có lần quét nào được lưu.\nHãy quay lại màn hình chính và chạm 1 thẻ NFC.</string>
+    <string name="history_clear_all">Xóa toàn bộ lịch sử</string>
+    <string name="history_clear_confirm_title">Xóa toàn bộ lịch sử?</string>
+    <string name="history_clear_confirm_message">Hành động này sẽ xóa vĩnh viễn tất cả các lần quét đã lưu. Không thể hoàn tác.</string>
+    <string name="history_delete_one_title">Xóa lần quét này?</string>
+    <string name="dialog_yes">Xóa</string>
+    <string name="dialog_no">Hủy</string>
+    <string name="dialog_close">Đóng</string>
     <string name="nfc_not_supported">Thiết bị này không hỗ trợ NFC.</string>
     <string name="nfc_disabled">NFC đang tắt. Vui lòng bật NFC trong Cài đặt.</string>
 </resources>

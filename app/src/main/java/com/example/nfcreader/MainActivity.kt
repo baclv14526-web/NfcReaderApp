@@ -25,6 +25,10 @@ import android.os.VibratorManager
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
+import com.example.nfcreader.data.AppDatabase
+import com.example.nfcreader.data.ScanRecord
+import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Locale
 
@@ -34,6 +38,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var tvResult: TextView
     private lateinit var tvStatus: TextView
     private lateinit var tvCardType: TextView
+    private lateinit var db: AppDatabase
 
     // --- Phản hồi rung + âm thanh khi đọc thẻ ---
     private lateinit var soundPool: SoundPool
@@ -46,6 +51,8 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        db = AppDatabase.getInstance(this)
+
         tvResult = findViewById(R.id.tvResult)
         tvStatus = findViewById(R.id.tvStatus)
         tvCardType = findViewById(R.id.tvCardType)
@@ -53,6 +60,9 @@ class MainActivity : AppCompatActivity() {
             tvResult.text = getString(R.string.hint_scan)
             tvStatus.text = getString(R.string.status_waiting)
             tvCardType.visibility = android.view.View.GONE
+        }
+        findViewById<android.view.View>(R.id.btnHistory).setOnClickListener {
+            startActivity(Intent(this, HistoryActivity::class.java))
         }
 
         setupFeedback()
@@ -235,6 +245,7 @@ class MainActivity : AppCompatActivity() {
             tvResult.text = sb.toString()
             tvStatus.text = getString(R.string.status_waiting)
             playFeedback(success = true)
+            saveScanToHistory(tag, guess, sb.toString(), success = true)
         } catch (e: Exception) {
             // Thường xảy ra khi thẻ bị nhấc ra quá sớm trong lúc đang đọc
             sb.appendLine()
@@ -244,6 +255,26 @@ class MainActivity : AppCompatActivity() {
             tvResult.text = sb.toString()
             tvStatus.text = getString(R.string.status_waiting)
             playFeedback(success = false)
+            saveScanToHistory(tag, guess, sb.toString(), success = false)
+        }
+    }
+
+    /** Lưu 1 bản ghi lịch sử vào SQLite (qua Room), chạy bất đồng bộ, không chặn UI. */
+    private fun saveScanToHistory(tag: Tag, guess: CardGuess, fullText: String, success: Boolean) {
+        val record = ScanRecord(
+            timestampMillis = System.currentTimeMillis(),
+            uid = bytesToHex(tag.id),
+            cardIcon = guess.icon,
+            cardTitle = guess.title,
+            fullText = fullText,
+            success = success
+        )
+        lifecycleScope.launch {
+            try {
+                db.scanRecordDao().insert(record)
+            } catch (_: Exception) {
+                // Lưu lịch sử thất bại không nên làm gián đoạn trải nghiệm đọc thẻ chính
+            }
         }
     }
 
