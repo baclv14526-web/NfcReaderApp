@@ -4,7 +4,7 @@
     <string name="status_reading">Đang đọc thẻ…</string>
     <string name="hint_scan">Chưa có dữ liệu.\nHãy chạm thẻ (vé xe, CCCD gắn chip, thẻ siêu thị…) vào mặt sau điện thoại.</string>
     <string name="btn_clear">Xóa kết quả</string>
-    <string name="btn_history">Xem lịch sử</string>
+    <string name="btn_history">🔒 Xem lịch sử</string>
     <string name="history_title">Lịch sử quét thẻ</string>
     <string name="history_empty">Chưa có lần quét nào được lưu.\nHãy quay lại màn hình chính và chạm 1 thẻ NFC.</string>
     <string name="history_clear_all">Xóa toàn bộ lịch sử</string>
@@ -14,6 +14,13 @@
     <string name="dialog_yes">Xóa</string>
     <string name="dialog_no">Hủy</string>
     <string name="dialog_close">Đóng</string>
+    <string name="lock_prompt_title">Xác thực để xem lịch sử</string>
+    <string name="lock_prompt_subtitle">Dùng vân tay, khuôn mặt, hoặc mã khóa màn hình của điện thoại</string>
+    <string name="lock_auth_error">Không xác thực được: %1$s</string>
+    <string name="lock_not_available_title">Chưa đặt khóa màn hình</string>
+    <string name="lock_not_available_message">Điện thoại của bạn chưa cài vân tay, khuôn mặt, hay mã PIN/mẫu hình/mật khẩu nào, nên app không thể khóa lịch sử bằng sinh trắc học. Bạn có thể vào Cài đặt để thiết lập, hoặc tiếp tục xem mà không khóa.</string>
+    <string name="lock_open_settings">Mở Cài đặt</string>
+    <string name="lock_continue_anyway">Vẫn xem (không khóa)</string>
     <string name="nfc_not_supported">Thiết bị này không hỗ trợ NFC.</string>
     <string name="nfc_disabled">NFC đang tắt. Vui lòng bật NFC trong Cài đặt.</string>
 </resources>

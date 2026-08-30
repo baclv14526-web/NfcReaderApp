@@ -88,4 +88,7 @@ dependencies {
     // Danh sách lịch sử + gắn với vòng đời Activity
     implementation("androidx.recyclerview:recyclerview:1.3.2")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.8.4")
+
+    // Khóa màn hình lịch sử bằng vân tay/khuôn mặt/mã khóa màn hình (PIN, mẫu hình, mật khẩu)
+    implementation("androidx.biometric:biometric:1.1.0")
 }

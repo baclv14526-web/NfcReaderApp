@@ -27,11 +27,19 @@ SAK/ATQA mới. Đây là **suy đoán dựa trên các giá trị SAK phổ bi�
 
 **Lịch sử quét thẻ (lưu SQLite qua Room):** mỗi lần quét (kể cả khi lỗi) đều được lưu tự
 động vào cơ sở dữ liệu SQLite cục bộ trên máy — không cần mạng, không gửi đi đâu cả. Nhấn
-nút **"Xem lịch sử"** ở màn hình chính để mở danh sách các lần quét trước đó, bấm vào 1
+nút **"🔒 Xem lịch sử"** ở màn hình chính để mở danh sách các lần quét trước đó, bấm vào 1
 dòng để xem lại toàn bộ nội dung chi tiết mà **không cần quét lại thẻ**. Có thể xóa từng
 dòng (nhấn giữ) hoặc xóa toàn bộ lịch sử. Code liên quan nằm trong package
 `com/example/nfcreader/data/` (`ScanRecord`, `ScanRecordDao`, `AppDatabase`) và
 `HistoryActivity.kt` / `HistoryAdapter.kt`.
+
+**Khóa màn hình lịch sử bằng vân tay/PIN:** vì dữ liệu thẻ có thể nhạy cảm, mỗi lần mở
+màn hình Lịch sử, app bắt buộc xác thực bằng vân tay, khuôn mặt, hoặc mã khóa màn hình
+(PIN/mẫu hình/mật khẩu) đã cài trên điện thoại (dùng `androidx.biometric`). Dữ liệu **chỉ
+được truy vấn từ database sau khi xác thực thành công** — không tải trước rồi mới che đi,
+để tránh lộ dữ liệu dù chỉ trong khoảnh khắc. Nếu máy chưa cài đặt bất kỳ hình thức khóa
+màn hình nào, app sẽ báo và cho lựa chọn đi tới Cài đặt hoặc tiếp tục xem mà không khóa
+(vì không có gì để xác thực).
 
 **Lưu ý quan trọng về CCCD gắn chip:** để đọc đầy đủ dữ liệu cá nhân (họ tên, ngày sinh,
 ảnh...) trên chip CCCD theo chuẩn ICAO 9303, cần thực hiện thêm bước xác thực **BAC/PACE**
