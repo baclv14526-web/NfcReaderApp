@@ -16,6 +16,7 @@
     <string name="dialog_close">Đóng</string>
     <string name="lock_prompt_title">Xác thực để xem lịch sử</string>
     <string name="lock_prompt_subtitle">Dùng vân tay, khuôn mặt, hoặc mã khóa màn hình của điện thoại</string>
+    <string name="lock_use_device_credential">Dùng PIN/mẫu hình thay thế</string>
     <string name="lock_auth_error">Không xác thực được: %1$s</string>
     <string name="lock_not_available_title">Chưa đặt khóa màn hình</string>
     <string name="lock_not_available_message">Điện thoại của bạn chưa cài vân tay, khuôn mặt, hay mã PIN/mẫu hình/mật khẩu nào, nên app không thể khóa lịch sử bằng sinh trắc học. Bạn có thể vào Cài đặt để thiết lập, hoặc tiếp tục xem mà không khóa.</string>

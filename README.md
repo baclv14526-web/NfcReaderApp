@@ -41,6 +41,15 @@ màn hình Lịch sử, app bắt buộc xác thực bằng vân tay, khuôn m�
 màn hình nào, app sẽ báo và cho lựa chọn đi tới Cài đặt hoặc tiếp tục xem mà không khóa
 (vì không có gì để xác thực).
 
+> **Lưu ý kỹ thuật:** Android không cho phép gộp `BIOMETRIC_WEAK` (loại cảm biến vân tay
+> phổ biến nhất, "Class 2" — có ở rất nhiều điện thoại tầm trung) chung với
+> `DEVICE_CREDENTIAL` trong 1 lần gọi; chỉ `BIOMETRIC_STRONG` (Class 3, thường chỉ có ở
+> điện thoại cao cấp) mới gộp được. Nếu code chỉ xin `STRONG + DEVICE_CREDENTIAL`, những
+> máy có vân tay Class 2 sẽ bị hệ thống **âm thầm bỏ qua bước vân tay** và nhảy thẳng sang
+> hỏi PIN (hoặc không hỏi gì nếu không có PIN) — đây là lỗi rất dễ gặp và khó nhận ra. App
+> đã được sửa để **thử vân tay/khuôn mặt (`BIOMETRIC_WEAK`) riêng trước**, có nút phụ
+> "Dùng PIN/mẫu hình thay thế" để chuyển sang khóa màn hình nếu người dùng muốn.
+
 **Lưu ý quan trọng về CCCD gắn chip:** để đọc đầy đủ dữ liệu cá nhân (họ tên, ngày sinh,
 ảnh...) trên chip CCCD theo chuẩn ICAO 9303, cần thực hiện thêm bước xác thực **BAC/PACE**
 bằng cách nhập số CCCD + ngày sinh + ngày hết hạn (lấy từ vùng MRZ) để sinh khoá giải mã.
