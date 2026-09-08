@@ -50,6 +50,12 @@ màn hình nào, app sẽ báo và cho lựa chọn đi tới Cài đặt hoặc
 > đã được sửa để **thử vân tay/khuôn mặt (`BIOMETRIC_WEAK`) riêng trước**, có nút phụ
 > "Dùng PIN/mẫu hình thay thế" để chuyển sang khóa màn hình nếu người dùng muốn.
 
+**Copy nhanh vào clipboard:** ngay sau khi quét (đồng thời với badge nhận diện loại thẻ),
+2 nút nhỏ **"📋 Copy UID"** và **"📋 Copy toàn bộ"** hiện ra dưới thanh trạng thái để copy
+nhanh mà không cần chọn/bôi đen chữ. Màn hình Lịch sử cũng có nút "Copy toàn bộ" trong hộp
+thoại xem chi tiết, để copy lại 1 lần quét cũ. Trên Android 13 trở lên, hệ thống tự hiện
+thông báo xác nhận copy nên app không hiện thêm Toast trùng lặp.
+
 **Lưu ý quan trọng về CCCD gắn chip:** để đọc đầy đủ dữ liệu cá nhân (họ tên, ngày sinh,
 ảnh...) trên chip CCCD theo chuẩn ICAO 9303, cần thực hiện thêm bước xác thực **BAC/PACE**
 bằng cách nhập số CCCD + ngày sinh + ngày hết hạn (lấy từ vùng MRZ) để sinh khoá giải mã.

@@ -1,7 +1,10 @@
 package com.example.nfcreader
 
 import android.app.AlertDialog
+import android.content.ClipData
+import android.content.ClipboardManager
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
 import android.widget.ScrollView
@@ -200,6 +203,13 @@ class HistoryActivity : AppCompatActivity() {
             .setTitle("${record.cardIcon} ${record.cardTitle}  •  ${dateFormat.format(Date(record.timestampMillis))}")
             .setView(scrollView)
             .setPositiveButton(R.string.dialog_close, null)
+            .setNeutralButton(R.string.btn_copy_all) { _, _ ->
+                val clipboardManager = getSystemService(CLIPBOARD_SERVICE) as ClipboardManager
+                clipboardManager.setPrimaryClip(ClipData.newPlainText("Kết quả đọc thẻ NFC", record.fullText))
+                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) {
+                    Toast.makeText(this, R.string.copied_all_toast, Toast.LENGTH_SHORT).show()
+                }
+            }
             .show()
     }
 

@@ -4,6 +4,10 @@
     <string name="status_reading">Đang đọc thẻ…</string>
     <string name="hint_scan">Chưa có dữ liệu.\nHãy chạm thẻ (vé xe, CCCD gắn chip, thẻ siêu thị…) vào mặt sau điện thoại.</string>
     <string name="btn_clear">Xóa kết quả</string>
+    <string name="btn_copy_uid">📋 Copy UID</string>
+    <string name="btn_copy_all">📋 Copy toàn bộ</string>
+    <string name="copied_uid_toast">Đã copy UID vào clipboard</string>
+    <string name="copied_all_toast">Đã copy toàn bộ kết quả vào clipboard</string>
     <string name="btn_history">🔒 Xem lịch sử</string>
     <string name="history_title">Lịch sử quét thẻ</string>
     <string name="history_empty">Chưa có lần quét nào được lưu.\nHãy quay lại màn hình chính và chạm 1 thẻ NFC.</string>

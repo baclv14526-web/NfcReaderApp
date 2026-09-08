@@ -1,6 +1,8 @@
 package com.example.nfcreader
 
 import android.app.PendingIntent
+import android.content.ClipData
+import android.content.ClipboardManager
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
@@ -38,7 +40,11 @@ class MainActivity : AppCompatActivity() {
     private lateinit var tvResult: TextView
     private lateinit var tvStatus: TextView
     private lateinit var tvCardType: TextView
+    private lateinit var rowCopyButtons: android.view.View
     private lateinit var db: AppDatabase
+
+    /** UID (hex) của lần quét gần nhất, dùng cho nút "Copy UID". */
+    private var lastUidHex: String? = null
 
     // --- Phản hồi rung + âm thanh khi đọc thẻ ---
     private lateinit var soundPool: SoundPool
@@ -56,13 +62,23 @@ class MainActivity : AppCompatActivity() {
         tvResult = findViewById(R.id.tvResult)
         tvStatus = findViewById(R.id.tvStatus)
         tvCardType = findViewById(R.id.tvCardType)
+        rowCopyButtons = findViewById(R.id.rowCopyButtons)
+
         findViewById<android.view.View>(R.id.btnClear).setOnClickListener {
             tvResult.text = getString(R.string.hint_scan)
             tvStatus.text = getString(R.string.status_waiting)
             tvCardType.visibility = android.view.View.GONE
+            rowCopyButtons.visibility = android.view.View.GONE
+            lastUidHex = null
         }
         findViewById<android.view.View>(R.id.btnHistory).setOnClickListener {
             startActivity(Intent(this, HistoryActivity::class.java))
+        }
+        findViewById<android.view.View>(R.id.btnCopyUid).setOnClickListener {
+            lastUidHex?.let { uid -> copyToClipboard("UID thẻ NFC", uid, R.string.copied_uid_toast) }
+        }
+        findViewById<android.view.View>(R.id.btnCopyAll).setOnClickListener {
+            copyToClipboard("Kết quả đọc thẻ NFC", tvResult.text.toString(), R.string.copied_all_toast)
         }
 
         setupFeedback()
@@ -234,6 +250,10 @@ class MainActivity : AppCompatActivity() {
         sb.appendLine("${guess.icon} ${guess.title}")
         sb.appendLine(guess.detail)
         sb.appendLine()
+
+        // Lưu UID để nút "Copy UID" dùng được ngay, và hiện hàng nút copy
+        lastUidHex = bytesToHex(tag.id)
+        rowCopyButtons.visibility = android.view.View.VISIBLE
 
         try {
             appendTagBasicInfo(tag, sb)
@@ -490,5 +510,19 @@ class MainActivity : AppCompatActivity() {
         val sb = StringBuilder()
         for (b in bytes) sb.append(String.format("%02X ", b))
         return sb.toString().trim()
+    }
+
+    /**
+     * Copy văn bản vào clipboard hệ thống.
+     * Từ Android 13 (API 33) trở lên, hệ thống tự hiện thông báo xác nhận copy,
+     * nên chỉ tự hiện Toast trên các phiên bản cũ hơn để tránh hiện 2 lần.
+     */
+    private fun copyToClipboard(label: String, text: String, @androidx.annotation.StringRes toastRes: Int) {
+        if (text.isBlank()) return
+        val clipboardManager = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+        clipboardManager.setPrimaryClip(ClipData.newPlainText(label, text))
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) {
+            Toast.makeText(this, toastRes, Toast.LENGTH_SHORT).show()
+        }
     }
 }
