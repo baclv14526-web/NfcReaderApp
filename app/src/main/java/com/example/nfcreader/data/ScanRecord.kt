@@ -27,5 +27,11 @@ data class ScanRecord(
     val fullText: String,
 
     /** true nếu lần quét đó đọc thành công, false nếu có lỗi xảy ra. */
-    val success: Boolean
+    val success: Boolean,
+
+    /**
+     * Nhãn/tên riêng do người dùng đặt cho lần quét này, vd "Thẻ xe bus của tôi".
+     * null nếu chưa đặt tên - khi đó hiển thị tên loại thẻ nhận diện tự động (cardTitle).
+     */
+    val label: String? = null
 )

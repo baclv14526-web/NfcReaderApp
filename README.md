@@ -33,6 +33,14 @@ dòng (nhấn giữ) hoặc xóa toàn bộ lịch sử. Code liên quan nằm t
 `com/example/nfcreader/data/` (`ScanRecord`, `ScanRecordDao`, `AppDatabase`) và
 `HistoryActivity.kt` / `HistoryAdapter.kt`.
 
+**Đặt tên/gắn nhãn cho từng thẻ đã lưu:** trong màn hình Lịch sử, bấm biểu tượng ✏️ trên
+mỗi dòng để đặt tên riêng cho lần quét đó, ví dụ "Thẻ xe bus của tôi" hay "Thẻ VIP siêu
+thị". Sau khi đặt tên, tên riêng sẽ hiển thị làm tiêu đề chính của dòng đó (tên loại thẻ
+nhận diện tự động chuyển xuống làm dòng phụ bên dưới, màu xanh), giúp tìm lại thẻ cần dùng
+nhanh hơn giữa nhiều lần quét. Có thể xóa tên bất cứ lúc nào (nút "Xóa tên" trong cùng
+dialog) để quay lại hiển thị mặc định. Nhãn được lưu trong cột `label` của bảng
+`scan_records` (SQLite, qua Room `Migration` để không mất dữ liệu cũ khi cập nhật app).
+
 **Khóa màn hình lịch sử bằng vân tay/PIN:** vì dữ liệu thẻ có thể nhạy cảm, mỗi lần mở
 màn hình Lịch sử, app bắt buộc xác thực bằng vân tay, khuôn mặt, hoặc mã khóa màn hình
 (PIN/mẫu hình/mật khẩu) đã cài trên điện thoại (dùng `androidx.biometric`). Dữ liệu **chỉ

@@ -32,7 +32,20 @@
             android:textColor="#212121"
             android:maxLines="1"
             android:ellipsize="end"
-            tools:text="Mifare Classic 1K" />
+            tools:text="Thẻ xe bus của tôi" />
+
+        <TextView
+            android:id="@+id/tvItemCardType"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="1dp"
+            android:textSize="12sp"
+            android:textColor="#1565C0"
+            android:maxLines="1"
+            android:ellipsize="end"
+            android:visibility="gone"
+            tools:visibility="visible"
+            tools:text="🚌 Mifare Classic 1K" />
 
         <TextView
             android:id="@+id/tvItemSubtitle"
@@ -47,10 +60,21 @@
     </LinearLayout>
 
     <TextView
+        android:id="@+id/btnItemEdit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="4dp"
+        android:padding="6dp"
+        android:textSize="18sp"
+        android:text="✏️"
+        android:contentDescription="@string/history_edit_label_title"
+        android:background="?attr/selectableItemBackgroundBorderless" />
+
+    <TextView
         android:id="@+id/tvItemStatus"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
+        android:layout_marginStart="6dp"
         android:textSize="18sp"
         tools:text="✅" />
 

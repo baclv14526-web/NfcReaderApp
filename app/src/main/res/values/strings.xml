@@ -15,6 +15,10 @@
     <string name="history_clear_confirm_title">Xóa toàn bộ lịch sử?</string>
     <string name="history_clear_confirm_message">Hành động này sẽ xóa vĩnh viễn tất cả các lần quét đã lưu. Không thể hoàn tác.</string>
     <string name="history_delete_one_title">Xóa lần quét này?</string>
+    <string name="history_edit_label_title">Đặt tên cho thẻ này</string>
+    <string name="history_edit_label_hint">VD: Thẻ xe bus của tôi, Thẻ VIP siêu thị…</string>
+    <string name="history_edit_label_save">Lưu</string>
+    <string name="history_edit_label_remove">Xóa tên</string>
     <string name="dialog_yes">Xóa</string>
     <string name="dialog_no">Hủy</string>
     <string name="dialog_close">Đóng</string>

@@ -24,4 +24,8 @@ interface ScanRecordDao {
 
     @Query("SELECT COUNT(*) FROM scan_records")
     suspend fun count(): Int
+
+    /** Đặt/sửa/xóa nhãn tên riêng cho 1 lần quét (truyền null để xóa nhãn). */
+    @Query("UPDATE scan_records SET label = :label WHERE id = :id")
+    suspend fun updateLabel(id: Long, label: String?)
 }

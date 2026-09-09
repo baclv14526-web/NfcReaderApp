@@ -7,6 +7,7 @@ import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
+import android.widget.EditText
 import android.widget.ScrollView
 import android.widget.TextView
 import android.widget.Toast
@@ -59,7 +60,8 @@ class HistoryActivity : AppCompatActivity() {
         adapter = HistoryAdapter(
             items = emptyList(),
             onItemClick = { record -> showDetailDialog(record) },
-            onItemLongClick = { record -> confirmDeleteOne(record) }
+            onItemLongClick = { record -> confirmDeleteOne(record) },
+            onEditLabelClick = { record -> showEditLabelDialog(record) }
         )
         rv.adapter = adapter
 
@@ -199,8 +201,14 @@ class HistoryActivity : AppCompatActivity() {
         }
         scrollView.addView(textView)
 
+        val titlePrefix = if (!record.label.isNullOrBlank()) {
+            "${record.label} (${record.cardIcon} ${record.cardTitle})"
+        } else {
+            "${record.cardIcon} ${record.cardTitle}"
+        }
+
         AlertDialog.Builder(this)
-            .setTitle("${record.cardIcon} ${record.cardTitle}  •  ${dateFormat.format(Date(record.timestampMillis))}")
+            .setTitle("$titlePrefix  •  ${dateFormat.format(Date(record.timestampMillis))}")
             .setView(scrollView)
             .setPositiveButton(R.string.dialog_close, null)
             .setNeutralButton(R.string.btn_copy_all) { _, _ ->
@@ -211,6 +219,35 @@ class HistoryActivity : AppCompatActivity() {
                 }
             }
             .show()
+    }
+
+    /** Hiện dialog để đặt/sửa/xóa tên riêng (nhãn) cho 1 thẻ đã lưu, vd "Thẻ xe bus của tôi". */
+    private fun showEditLabelDialog(record: ScanRecord) {
+        val padding = (16 * resources.displayMetrics.density).toInt()
+        val editText = EditText(this).apply {
+            setText(record.label ?: "")
+            hint = getString(R.string.history_edit_label_hint)
+            setSelection(text.length)
+            setPadding(padding, padding, padding, padding)
+        }
+
+        val dialogBuilder = AlertDialog.Builder(this)
+            .setTitle(R.string.history_edit_label_title)
+            .setView(editText)
+            .setPositiveButton(R.string.history_edit_label_save) { _, _ ->
+                val newLabel = editText.text.toString().trim().ifBlank { null }
+                lifecycleScope.launch { db.scanRecordDao().updateLabel(record.id, newLabel) }
+            }
+            .setNegativeButton(R.string.dialog_no, null)
+
+        // Chỉ hiện nút "Xóa tên" khi thẻ đang có nhãn (không cần thiết nếu chưa đặt tên)
+        if (!record.label.isNullOrBlank()) {
+            dialogBuilder.setNeutralButton(R.string.history_edit_label_remove) { _, _ ->
+                lifecycleScope.launch { db.scanRecordDao().updateLabel(record.id, null) }
+            }
+        }
+
+        dialogBuilder.show()
     }
 
     private fun confirmDeleteOne(record: ScanRecord) {
